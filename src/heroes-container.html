@@ -1,0 +1,117 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-tabs/paper-tabs.html">
+<link rel="import" href="../src/heroes-card.html">
+
+
+<dom-module id="heroes-container">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+        padding: 10px;
+      }
+
+      .heroes-list {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      @media (max-width: 500px) { 
+        .heroes-list {
+          display: grid;
+          grid-template-columns: auto;
+        }
+    </style>
+
+    <iron-ajax id="getHeroDetails" method="get" content-type="application/json" handle-as="text" on-response="handleResponse"
+      on-error="handleError">
+    </iron-ajax>
+    <div class="card">
+      <paper-tabs attr-for-selected="name" selected="{{classSelected}}" on-selected-changed="onClassSelectedChanged" scrollable>
+        <paper-tab name="All">All</paper-tab>
+        <paper-tab name="Knight">Knight</paper-tab>
+        <paper-tab name="Warrior">Warrior</paper-tab>
+        <paper-tab name="Archer">Archer</paper-tab>
+        <paper-tab name="Assassin">Assassin</paper-tab>
+        <paper-tab name="Machinist">Machinist</paper-tab>
+        <paper-tab name="Wizard">Wizard</paper-tab>
+        <paper-tab name="Priest">Priest</paper-tab>
+      </paper-tabs>
+    </div>
+    <div class="heroes-list">
+      <template is="dom-repeat" items="{{heroesViewModel}}" as="hero">
+        <heroes-card hero="[[hero]]" test={{hero.class}}></heroes-card>
+      </template>
+    </div>
+  </template>
+
+  <script>
+    class HeroesContainer extends Polymer.Element {
+      static get is() { return 'heroes-container'; }
+      constructor() {
+        super();
+        this.classSelected = "All";
+        this.heroDetails = new Array();
+      }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          heroDetails: Array,
+          heroesViewModel: Array,
+          classSelected: String
+        };
+      }
+
+      handleResponse(event) {
+        var response = JSON.parse(event.detail.response);
+        this.error = '';
+        this.heroDetails = response;
+        this.filterHeroes(this.classSelected);
+      }
+
+      handleError(event) {
+        this.error = event.detail.request.xhr.response;
+      }
+
+      ready() {
+        super.ready();
+        this.$.getHeroDetails.url = 'http://localhost:50562/api/heroes';
+        this.$.getHeroDetails.generateRequest();
+      }
+
+
+
+      filterHeroes(className){
+        if(className == "All"){
+          this.heroesViewModel = this.heroDetails;
+        }else{
+          this.heroesViewModel = this.heroDetails.filter(x => x.class === className);
+        }
+      }
+
+      onClassSelectedChanged(selected){
+        this.filterHeroes(selected.detail.value);
+      }
+    }
+
+
+    window.customElements.define(HeroesContainer.is, HeroesContainer);
+  </script>
+</dom-module>

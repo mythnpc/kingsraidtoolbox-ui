@@ -1,0 +1,214 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../src/box-info.html">
+<link rel="import" href="../bower_components/iron-icons/iron-icons.html">
+<link rel="import" href="../bower_components/iron-icons/image-icons.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
+
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="heroes-card">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+            }
+
+            .card {
+                position: relative;
+                -webkit-animation: fadein 1s;
+                /* Safari, Chrome and Opera > 12.1 */
+                -moz-animation: fadein 1s;
+                /* Firefox < 16 */
+                -ms-animation: fadein 1s;
+                /* Internet Explorer */
+                -o-animation: fadein 1s;
+                /* Opera < 12.1 */
+                animation: fadein 1s;
+            }
+
+            .hero-info {
+                display: flex;
+            }
+
+            .hero-data {
+                padding-left: 20px;
+            }
+
+            .hero-suitability {
+                width: 100%;
+                display: grid;
+                grid-gap: 20px;
+                grid-template-columns: repeat(4, 1fr);
+            }
+
+            .misc {
+                margin-left: auto;
+            }
+
+            @media (max-width: 500px) {
+                .hero-info {
+                    display: flex;
+                    flex-wrap: wrap;
+                }
+
+                .hero-image {
+                    clear: both;
+                    width: 100%;
+                    flex-shrink: 0;
+                }
+
+                .hero-image img {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .hero-data {
+                    padding-top: 10px;
+                    padding-left: 0px;
+                    padding-bottom: 10px;
+                }
+            }
+
+            @keyframes fadein {
+                from {
+                    top: 200px;
+                    opacity: 0;
+                }
+                to {
+                    top: 0px;
+                    opacity: 1;
+                }
+            }
+
+            /* Firefox < 16 */
+
+            @-moz-keyframes fadein {
+                from {
+                    top: 200px;
+                    opacity: 0;
+                }
+                to {
+                    top: 0px;
+                    opacity: 1;
+                }
+            }
+
+            /* Safari, Chrome and Opera > 12.1 */
+
+            @-webkit-keyframes fadein {
+                from {
+                    top: 200px;
+                    opacity: 0;
+                }
+                to {
+                    top: 0px;
+                    opacity: 1;
+                }
+            }
+
+            /* Internet Explorer */
+
+            @-ms-keyframes fadein {
+                from {
+                    top: 200px;
+                    opacity: 0;
+                }
+                to {
+                    top: 0px;
+                    opacity: 1;
+                }
+            }
+
+            /* Opera < 12.1 */
+
+            @-o-keyframes fadein {
+                from {
+                    top: 200px;
+                    opacity: 0;
+                }
+                to {
+                    top: 0px;
+                    opacity: 1;
+                }
+            }
+        </style>
+
+        <div class="card">
+            <div class="hero-info">
+                <div class="hero-image">
+                    <img src="../images/heroes/[[hero.name]].png" alt="Phillop" height="80" width="96">
+                </div>
+                <div class="hero-data">
+                    <div>
+                        <b>[[hero.name]]</b>
+                    </div>
+                    <div>
+                        <iron-icon icon="image:control-point"></iron-icon>
+                        [[hero.class]]
+                    </div>
+                    <div>
+                        <iron-icon icon="image:colorize"></iron-icon>
+                        [[hero.uniqueWeapon]]
+                    </div>
+                </div>
+                <div class="misc">
+                    <paper-icon-button icon="icons:star-border"></paper-icon-button>
+                </div>
+            </div>
+            <div class="hero-suitability">
+
+                <box-info title="Dungeons" value="[[cardDetail.dungeons]]"></box-info>
+                <box-info title="World" value="[[cardDetail.worldBoss]]"></box-info>
+                <box-info title="Arena" value="[[cardDetail.arena]]"></box-info>
+                <box-info title="Raids" value="[[cardDetail.raids]]"></box-info>
+            </div>
+        </div>
+    </template>
+
+    <script>
+        class HeroesCard extends Polymer.Element {
+            constructor() {
+                super();
+                this.cardDetail = {
+                    id: 101,
+                    name: 'Phillop',
+                    imageUrl: 'Phillop.png',
+                    class: 'Knight',
+                    uniqueWeapon: 'Dragon\'s Ruins, Atein',
+                    uniqueWeaponEffect: 'Upon receiving DMG, stacks Dragon Rage for 10 sec. Per each stacked Dragon Rage, ATK and DEF are increased by x',
+                    dungeons: Math.floor(Math.random() * 10) + 1,
+                    worldBoss: Math.floor(Math.random() * 10) + 1,
+                    arena: Math.floor(Math.random() * 10) + 1,
+                    raids: Math.floor(Math.random() * 10) + 1
+                }
+            }
+
+            static get is() { return 'heroes-card'; }
+
+            static get properties() {
+                return {
+                    cardDetail: Object,
+                    test: String,
+                    hero: {
+                        type: Object
+                    }
+                };
+            }
+
+        }
+
+
+        window.customElements.define(HeroesCard.is, HeroesCard);
+    </script>
+</dom-module>
