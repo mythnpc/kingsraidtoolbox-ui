@@ -1,0 +1,282 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="hero-detail">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+                padding: 10px;
+                width: 80%;
+                margin: auto;
+            }
+
+            .hero-info {
+                display: flex;
+            }
+
+            .hero-image img {
+                width: 240px;
+                height: 200px;
+            }
+
+            .hero-description-container {
+                padding-left: 20px;
+            }
+
+            .tab {
+                width: 120px;
+                background-color: #4285f4;
+                margin-left: auto;
+                color: white;
+                position: relative;
+                top: -16px;
+                left: 16px;
+            }
+
+            .skill-decription {
+                margin-top: 20px;
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                background-color: lightgrey;
+            }
+
+            .description-body {
+                padding-right: 10px;
+            }
+
+            .heading {
+                background-color: #4285f4;
+                color: white;
+            }
+
+            .overview-container {
+                display: grid;
+                grid-template-columns: repeat(3, 1fr);
+                grid-column-gap: 10px;
+            }
+
+            .overview-item {
+                padding: 10px;
+                background-color: #4285f4;
+                color: white;
+            }
+
+            @media (max-width: 500px) {
+                :host {
+                    width: 100%;
+                }
+
+                .overview-container {
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                    grid-column-gap: 0px;
+                    grid-row-gap: 10px;
+
+                }
+
+                .skill-decription {
+                    margin-top: 20px;
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                    background-color: lightgrey;
+                }
+
+                .tab {
+                    margin-left: 0px;
+                    left: -17px;
+                }
+
+                .hero-info {
+                    flex-wrap: wrap;
+                }
+
+                .hero-image img {
+                    width: 100%;
+                    height: 100%;
+                }
+
+                .hero-description-container {
+                    padding-top: 1em;
+                    padding-left: 0px;
+                }
+
+            }
+        </style>
+
+        <div class="card">
+            <div class="tab">
+                <b>Description</b>
+            </div>
+            <div class="hero-info">
+                <div class="hero-image">
+                    <img src="../images/heroes/[[herodetail.name]].png" alt="Phillop">
+                </div>
+                <div class="hero-description-container">
+                    <div>
+                        <b>[[herodetail.name]]</b>
+                    </div>
+                    <div class="hero-decription">
+                        Phillop fills the same purpose as Jane, but for Physical Damage teams. If used in the right comp, his passive destroys the
+                        enemy's Physical Defense and provides insanely huge and devastating increase in DPS for your team.
+                        Aside from that, he is subpar in terms of CC (only Collision) but has probably one of the highest
+                        self Physical Defense buffs in the game combined with immunity to status effects and the ability
+                        to heal himself by 15% of max HP. The cooldown is rather higher (30 seconds) but still can be game
+                        changer if used right.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="tab">
+                <b>Overview</b>
+            </div>
+            <div class="overview-container">
+                <div class="overview-item">
+                    <p>Pros</p>
+                    <ul>
+                        <li>P.DEF Shred</li>
+                        <li>Self heal/buff/immunity</li>
+                        <li>Deals Max HP Damage</li>
+                        <li>Great in all PVE contents</li>
+                    </ul>
+                </div>
+                <div class="overview-item">
+                    <p>Cons</p>
+                    <ul>
+                        <li>P.DEF Shred</li>
+                        <li>Self heal/buff/immunity</li>
+                        <li>Deals Max HP Damage</li>
+                        <li>Great in all PVE contents</li>
+                    </ul>
+                </div>
+                <div class="overview-item">
+                    <p>
+                        <b>Unique Weapon: [[herodetail.uniqueWeapon]]</b>
+                    </p>
+                    <div>Upon receiving DMG, stacks Dragon Rage for 10 sec. Per each stacked Dragon Rage, ATK and DEF are increased
+                        by
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="tab">
+                <b>Skills</b>
+            </div>
+            <div class="skill-container">
+                <div class="skill-tab">
+                    <div class="skill-decription">
+                        <div>
+                            <div class="heading">Skill Name</div>
+                            <div>Collision</div>
+                        </div>
+                        <div>
+                            <div class="heading">Description</div>
+                            <div class='description-body'>Deals 34, 130 P.DMG and Knocks Down the enemy for 3 sec.</div>
+                        </div>
+                        <div>
+                            <div class="heading">Mana Requirement</div>
+                            <div>3</div>
+                        </div>
+                        <div>
+                            <div class="heading">Attributes</div>
+                            <div>Reduces hit enemies' P.DEF by 50% for 10 sec</div>
+                        </div>
+                    </div>
+
+                    <div class="skill-decription">
+                        <div>
+                            <div class="heading">Skill Name</div>
+                            <div>Headbutt</div>
+                        </div>
+                        <div>
+                            <div class="heading">Description</div>
+                            <div class='description-body'>Dashes toward the enemy and deals 28,148 P.DMG, Knocking them back. Hit enemy's ATK Spd is reduced
+                                by 20% for 10 sec.</div>
+                        </div>
+                        <div>
+                            <div class="heading">Mana Requirement</div>
+                            <div>2</div>
+                        </div>
+                        <div>
+                            <div class="heading">Attributes</div>
+                            <div>Reduces target's ATK by 25%</div>
+                        </div>
+                    </div>
+
+                    <div class="skill-decription">
+                        <div>
+                            <div class="heading">Skill Name</div>
+                            <div>Earth Incarnate</div>
+                        </div>
+                        <div>
+                            <div class="heading">Description</div>
+                            <div class='description-body'>Increases P.DEF and M.DEF by 10,370 for 15 sec and heals 15% of HP. Gains CC immunity.</div>
+                        </div>
+                        <div>
+                            <div class="heading">Mana Requirement</div>
+                            <div>4</div>
+                        </div>
+                        <div>
+                            <div class="heading">Attributes</div>
+                            <div>DMG Reduction is increased by 250.</div>
+                        </div>
+                    </div>
+
+                    <div class="skill-decription">
+                        <div>
+                            <div class="heading">Skill Name</div>
+                            <div>Destroy Armor</div>
+                        </div>
+                        <div>
+                            <div class="heading">Description</div>
+                            <div class='description-body'>Upon attacking, weakens enemy P.DEF by 1,233 for 15 sec. Can be stacked up to 5 times max.</div>
+                        </div>
+                        <div>
+                            <div class="heading">Mana Requirement</div>
+                            <div>Passive</div>
+                        </div>
+                        <div>
+                            <div class="heading">Attributes</div>
+                            <div>Enemy P.Dodge chance is reduced by 10% per stack.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </template>
+
+    <script>
+        class HeroDetail extends Polymer.Element {
+            static get is() {
+                return 'hero-detail';
+            }
+
+            static get properties() {
+                return {
+                    herodetail: {
+                        type: Object
+                    }
+                };
+            }
+        }
+
+
+
+        window.customElements.define(HeroDetail.is, HeroDetail);
+    </script>
+</dom-module>

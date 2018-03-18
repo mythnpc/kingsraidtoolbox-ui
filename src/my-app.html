@@ -21,10 +21,12 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/iron-selector/iron-selector.html">
 <link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
 
-<link rel="lazy-import" href="heroes-container.html">
-<link rel="lazy-import" href="my-view2.html">
-<link rel="lazy-import" href="my-view3.html">
-<link rel="lazy-import" href="my-view404.html">
+<link rel="import" href="heroes-container.html">
+<link rel="import" href="view2.html">
+<link rel="import" href="view3.html">
+<link rel="import" href="view404.html">
+<link rel="import" href="hero.html">
+
 
 <dom-module id="my-app">
   <template>
@@ -67,21 +69,21 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
     </style>
 
-    <app-location
-        route="{{route}}"
-        url-space-regex="^[[rootPath]]">
-    </app-location>
 
-    <app-route
-        route="{{route}}"
-        pattern="[[rootPath]]:page"
-        data="{{routeData}}"
-        tail="{{subroute}}">
-    </app-route>
 
-    <app-drawer-layout fullbleed narrow="{{narrow}}">
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
+
+    <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
+    <app-route route="{{subroute}}" pattern="/:id/detail" data="{{idData}}" active="{{onDetailPage}}"></app-route>
+    <iron-media-query query="max-width: 400px" query-matches="{{smallScreen}}"></iron-media-query>
+
+    <iron-ajax id="getHeroDetails" method="get" content-type="application/json" handle-as="text" on-response="handleResponse"
+      on-error="handleError">
+    </iron-ajax>
+
+    <app-drawer-layout drawer-width="288px" force-narrow>
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+      <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
           <a name="heroes-container" href="[[rootPath]]heroes-container">Heroes Container</a>
@@ -91,21 +93,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </app-drawer>
 
       <!-- Main content -->
-      <app-header-layout has-scrolling-region>
-
-        <app-header slot="header" condenses reveals effects="waterfall">
-          <app-toolbar>
+      <app-header-layout>
+        <app-header slot="header" fixed="[[smallScreen]]" condenses="[[!smallScreen]]" reveals="[[!smallScreen]]" effects="waterfall">
+          <app-toolbar id="mainToolbar">
             <paper-icon-button icon="menu" drawer-toggle></paper-icon-button>
-            <div main-title>My App</div>
+            <div main-title>Toolbox App</div>
           </app-toolbar>
         </app-header>
 
-        <iron-pages
-            selected="[[page]]"
-            attr-for-selected="name"
-            fallback-selection="view404"
-            role="main">
-          <heroes-container name="heroes-container"></heroes-container>
+        <iron-pages selected="[[page]]" attr-for-selected="name">
+          <template is="dom-if" if="[[heroDetails]]">
+            <heroes-container herodetails=[[heroDetails]] name="heroes-container"></heroes-container>
+            <hero-detail herodetail="[[_getHeroDetail(heroDetails, idData.id)]]" name="hero"></hero-detail>
+          </template>
           <my-view2 name="view2"></my-view2>
           <my-view3 name="view3"></my-view3>
           <my-view404 name="view404"></my-view404>
@@ -120,20 +120,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     Polymer.setPassiveTouchGestures(true);
 
     class MyApp extends Polymer.Element {
-      static get is() { return 'my-app'; }
+      static get is() {
+        return 'my-app';
+      }
+
+      constructor() {
+        super();
+      }
 
       static get properties() {
         return {
           page: {
             type: String,
             reflectToAttribute: true,
-            observer: '_pageChanged',
+            observer: '_pageChanged'
           },
           routeData: Object,
+          route: Object,
           subroute: Object,
           // This shouldn't be neccessary, but the Analyzer isn't picking up
           // Polymer.Element#rootPath
           rootPath: String,
+          heroDetails: Array,
+          onDetailPage: Boolean,
+          idData: Object
         };
       }
 
@@ -154,16 +164,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _pageChanged(page) {
         // Load page import on demand. Show 404 page if fails
-        const resolvedPageUrl = this.resolveUrl(page + '.html');
-        Polymer.importHref(
-            resolvedPageUrl,
-            null,
-            this._showPage404.bind(this),
-            true);
+        // const resolvedPageUrl = this.resolveUrl(page + '.html');
+        // Polymer.importHref(
+        //   resolvedPageUrl,
+        //   null,
+        //   this._showPage404.bind(this),
+        //   true);
       }
 
       _showPage404() {
         this.page = 'view404';
+      }
+
+      handleResponse(event) {
+        var response = JSON.parse(event.detail.response);
+        this.error = '';
+        this.heroDetails = response;
+      }
+
+      handleError(event) {
+        this.error = event.detail.request.xhr.response;
+      }
+
+      ready() {
+        super.ready();
+        this.$.getHeroDetails.url = 'http://localhost:50562/api/heroes';
+        this.$.getHeroDetails.generateRequest();
+      }
+
+      _getHeroDetail(heroes, chosenId) {
+        var hero = heroes.find(x => x.id === parseInt(chosenId));
+        return hero;
       }
     }
 

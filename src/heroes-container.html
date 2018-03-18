@@ -28,16 +28,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         grid-template-columns: repeat(3, 1fr);
       }
 
-      @media (max-width: 500px) { 
+      @media (max-width: 500px) {
         .heroes-list {
           display: grid;
           grid-template-columns: auto;
         }
+      }
     </style>
 
-    <iron-ajax id="getHeroDetails" method="get" content-type="application/json" handle-as="text" on-response="handleResponse"
-      on-error="handleError">
-    </iron-ajax>
     <div class="card">
       <paper-tabs attr-for-selected="name" selected="{{classSelected}}" on-selected-changed="onClassSelectedChanged" scrollable>
         <paper-tab name="All">All</paper-tab>
@@ -52,18 +50,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </div>
     <div class="heroes-list">
       <template is="dom-repeat" items="{{heroesViewModel}}" as="hero">
-        <heroes-card hero="[[hero]]" test={{hero.class}}></heroes-card>
+        <heroes-card hero="[[hero]]"></heroes-card>
       </template>
     </div>
   </template>
 
   <script>
     class HeroesContainer extends Polymer.Element {
-      static get is() { return 'heroes-container'; }
+      static get is() {
+        return 'heroes-container';
+      }
       constructor() {
         super();
         this.classSelected = "All";
-        this.heroDetails = new Array();
       }
 
       static get properties() {
@@ -73,41 +72,30 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             reflectToAttribute: true,
             observer: '_pageChanged',
           },
-          heroDetails: Array,
+          herodetails: {
+            type: Array
+          },
           heroesViewModel: Array,
-          classSelected: String
+          classSelected: String,
+          test: Number
         };
       }
 
-      handleResponse(event) {
-        var response = JSON.parse(event.detail.response);
-        this.error = '';
-        this.heroDetails = response;
-        this.filterHeroes(this.classSelected);
-      }
-
-      handleError(event) {
-        this.error = event.detail.request.xhr.response;
-      }
-
-      ready() {
-        super.ready();
-        this.$.getHeroDetails.url = 'http://localhost:50562/api/heroes';
-        this.$.getHeroDetails.generateRequest();
-      }
-
-
-
-      filterHeroes(className){
-        if(className == "All"){
-          this.heroesViewModel = this.heroDetails;
-        }else{
-          this.heroesViewModel = this.heroDetails.filter(x => x.class === className);
+      filterHeroes(className) {
+        if (className == "All") {
+          this.heroesViewModel = this.herodetails;
+        } else {
+          this.heroesViewModel = this.herodetails.filter(x => x.class === className);
         }
       }
 
-      onClassSelectedChanged(selected){
+      onClassSelectedChanged(selected) {
         this.filterHeroes(selected.detail.value);
+      }
+
+      ready(){
+        super.ready();
+        this.filterHeroes(this.classSelected);
       }
     }
 

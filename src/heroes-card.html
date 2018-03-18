@@ -143,6 +143,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
             }
         </style>
+        <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
 
         <div class="card">
             <div class="hero-info">
@@ -163,11 +164,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     </div>
                 </div>
                 <div class="misc">
-                    <paper-icon-button icon="icons:star-border"></paper-icon-button>
+                    <paper-icon-button on-tap="onDetailClick" icon="image:center-focus-strong"></paper-icon-button>
                 </div>
             </div>
             <div class="hero-suitability">
-
                 <box-info title="Dungeons" value="[[cardDetail.dungeons]]"></box-info>
                 <box-info title="World" value="[[cardDetail.worldBoss]]"></box-info>
                 <box-info title="Arena" value="[[cardDetail.arena]]"></box-info>
@@ -194,7 +194,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 }
             }
 
-            static get is() { return 'heroes-card'; }
+            static get is() {
+                return 'heroes-card';
+            }
 
             static get properties() {
                 return {
@@ -202,13 +204,15 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                     test: String,
                     hero: {
                         type: Object
-                    }
+                    },
+                    route: Object
                 };
             }
 
+            onDetailClick() {
+                this.set('route.path', '/hero/' + this.hero.id + '/detail');
+            }
         }
-
-
         window.customElements.define(HeroesCard.is, HeroesCard);
     </script>
 </dom-module>
