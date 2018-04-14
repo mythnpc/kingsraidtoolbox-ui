@@ -71,7 +71,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 
 
-    <app-location route="{{route}}" url-space-regex="^[[rootPath]]"></app-location>
+    <app-location route="{{route}}" url-space-regex="^[[rootPath]]" use-hash-as-path></app-location>
 
     <app-route route="{{route}}" pattern="[[rootPath]]:page" data="{{routeData}}" tail="{{subroute}}"></app-route>
     <app-route route="{{subroute}}" pattern="/:id/detail" data="{{idData}}" active="{{onDetailPage}}"></app-route>
@@ -86,9 +86,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <app-drawer id="drawer" slot="drawer">
         <app-toolbar>Menu</app-toolbar>
         <iron-selector selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
-          <a name="heroes-container" href="[[rootPath]]heroes-container">Heroes Container</a>
-          <a name="view2" href="[[rootPath]]view2">View Two</a>
-          <a name="view3" href="[[rootPath]]view3">View Three</a>
+          <a name="heroes-container" href="[[rootPath]]#/heroes-container">Heroes Container</a>
+          <a name="view2" href="[[rootPath]]#/view2">View Two</a>
+          <a name="view3" href="[[rootPath]]#/view3">View Three</a>
         </iron-selector>
       </app-drawer>
 

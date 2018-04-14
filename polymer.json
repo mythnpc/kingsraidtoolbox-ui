@@ -3,9 +3,10 @@
   "shell": "src/my-app.html",
   "fragments": [
     "src/heroes-container.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-view404.html"
+    "src/hero.html",
+    "src/view2.html",
+    "src/view3.html",
+    "src/view404.html"
   ],
   "sources": [
     "images/**/*",

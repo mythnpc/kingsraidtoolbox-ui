@@ -9,7 +9,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 -->
 
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="./hero-skill-card.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+
 
 <dom-module id="hero-detail">
     <template>
@@ -44,11 +47,22 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 left: 16px;
             }
 
-            .skill-decription {
+            .skill-description {
                 margin-top: 20px;
                 display: grid;
                 grid-template-columns: repeat(4, 1fr);
                 background-color: lightgrey;
+            }
+
+
+            .skill-description div .textarea {
+                display: block !important;
+                margin: 0px;
+                padding: 10px;
+                width: 94%;
+                height: 50px;
+                resize: none;
+                overflow: hidden;
             }
 
             .description-body {
@@ -72,6 +86,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 color: white;
             }
 
+            .editButton {
+                float: right;
+                width: 24px;
+                height: 24px;
+                padding: 0px;
+            }
+
             @media (max-width: 500px) {
                 :host {
                     width: 100%;
@@ -85,12 +106,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
                 }
 
-                .skill-decription {
-                    margin-top: 20px;
-                    display: grid;
-                    grid-template-columns: repeat(1, 1fr);
-                    background-color: lightgrey;
-                }
+
 
                 .tab {
                     margin-left: 0px;
@@ -175,29 +191,36 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <div class="card">
             <div class="tab">
                 <b>Skills</b>
+                <paper-icon-button class="editButton" on-tap="onAddSkillTap" icon="image:center-focus-strong"></paper-icon-button>
             </div>
+
             <div class="skill-container">
                 <div class="skill-tab">
-                    <div class="skill-decription">
+
+                    <template is="dom-repeat" items="{{skillDetails}}" as="skillDetail">
+                        <hero-skill-card skill-details="{{skillDetails}}" skill-detail="{{skillDetail}}" edit-mode="[[editMode]]"></hero-skill-card>
+                    </template>
+
+                    <!-- <div class="skill-description">
                         <div>
                             <div class="heading">Skill Name</div>
                             <div>Collision</div>
                         </div>
                         <div>
                             <div class="heading">Description</div>
-                            <div class='description-body'>Deals 34, 130 P.DMG and Knocks Down the enemy for 3 sec.</div>
+                            <textarea class='description-body textarea'>[[arrayItem(skillDetails.*, 0, 'description')]]</textarea>
                         </div>
                         <div>
                             <div class="heading">Mana Requirement</div>
-                            <div>3</div>
+                            <textarea class='textarea'>3</textarea>
                         </div>
                         <div>
                             <div class="heading">Attributes</div>
-                            <div>Reduces hit enemies' P.DEF by 50% for 10 sec</div>
+                            <textarea class='textarea'>Reduces hit enemies' P.DEF by 50% for 10 sec</textarea>
                         </div>
                     </div>
 
-                    <div class="skill-decription">
+                    <div class="skill-description">
                         <div>
                             <div class="heading">Skill Name</div>
                             <div>Headbutt</div>
@@ -217,7 +240,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </div>
                     </div>
 
-                    <div class="skill-decription">
+                    <div class="skill-description">
                         <div>
                             <div class="heading">Skill Name</div>
                             <div>Earth Incarnate</div>
@@ -236,7 +259,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                         </div>
                     </div>
 
-                    <div class="skill-decription">
+                    <div class="skill-description">
                         <div>
                             <div class="heading">Skill Name</div>
                             <div>Destroy Armor</div>
@@ -253,7 +276,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                             <div class="heading">Attributes</div>
                             <div>Enemy P.Dodge chance is reduced by 10% per stack.</div>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>
@@ -262,6 +285,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
     <script>
         class HeroDetail extends Polymer.Element {
+            constructor() {
+                super();
+                this.editMode = false;
+                this.skillDetails = [{
+                    name: "Collapse",
+                    manaCost: 2,
+                    description: "Deals 34, 130 P.DMG and Knocks Down the enemy for 3 sec.",
+                    attributes: "Reduces hit enemies' P.DEF by 50% for 10 sec"
+                }];
+            }
+
             static get is() {
                 return 'hero-detail';
             }
@@ -270,9 +304,32 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
                 return {
                     herodetail: {
                         type: Object
+                    },
+                    editMode: Boolean,
+                    skillDetails: {
+                        type: Array,
+                        notify: true,
                     }
                 };
             }
+
+            arrayItem(change, index, path) {
+                // this.get(path, root) returns a value for a path
+                // relative to a root object.
+                return this.get(path, change.base[index]);
+            }
+
+            onAddSkillTap() {
+                var temp = {
+                    name: "Name",
+                    manaCost: 3,
+                    description: "SOmthing",
+                    attributes: "teehee"
+                };
+
+                this.push("skillDetails", temp);
+            }
+
         }
 
 

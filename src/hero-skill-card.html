@@ -1,0 +1,161 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/iron-icons/editor-icons.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="hero-skill-card">
+    <template>
+        <style include="shared-styles">
+            :host {
+                display: block;
+            }
+
+            .skill-description {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+                background-color: lightgrey;
+            }
+
+            .skill-description div .text {
+                height: 50px;
+                padding: 10px;
+                border: 1px solid white;
+            }
+
+            .skill-description div .textarea {
+                display: block !important;
+                margin: 0px;
+                padding: 10px;
+                width: 94%;
+                height: 50px;
+                resize: none;
+                overflow: hidden;
+            }
+
+            .description-body {
+                padding-right: 10px;
+            }
+
+            .heading {
+                background-color: #4285f4;
+                color: white;
+            }
+
+            .editButton {
+                width: 100%;
+                height: 24px;
+                padding: 0px;
+                background-color: #4285f4;
+                color: white;
+            }
+
+            .editButton:hover {
+                background-color: lightblue;
+            }
+
+            @media (max-width: 500px) {
+                .skill-description {
+                    display: grid;
+                    grid-template-columns: repeat(1, 1fr);
+                    background-color: lightgrey;
+                }
+            }
+        </style>
+        <paper-icon-button class="editButton" on-tap="onEditTap" icon="editor:mode-edit"></paper-icon-button>
+        <div class="skill-description">
+            <template is="dom-if" if="[[!editMode]]">
+                <div>
+                    <div class="heading">Skill Name</div>
+                    <div class="text">[[temp.name]]</div>
+                </div>
+                <div>
+                    <div class="heading">Description</div>
+                    <div class="text">[[temp.description]]</div>
+                </div>
+                <div>
+                    <div class="heading">Mana Requirement</div>
+                    <div class="text">[[temp.manaCost]]</div>
+                </div>
+                <div>
+                    <div class="heading">Attributes</div>
+                    <div class="text">[[temp.attributes]]</div>
+                </div>
+            </template>
+
+            <template is="dom-if" if="[[editMode]]">
+                <div>
+                    <div class="heading">Skill Name</div>
+                    <textarea class="textarea" value="{{temp.name}}"></textarea>
+                </div>
+                <div>
+                    <div class="heading">Description</div>
+                    <textarea class='description-body textarea' value="{{temp.description::input}}"></textarea>
+                </div>
+                <div>
+                    <div class="heading">Mana Requirement</div>
+                    <textarea class='description-body textarea' value="{{temp.manaCost::input}}"></textarea>
+                </div>
+                <div>
+                    <div class="heading">Attributes</div>
+                    <textarea class='description-body textarea' value="{{temp.attributes::input}}"></textarea>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <script>
+        class HeroSkillCard extends Polymer.Element {
+            static get is() {
+                return 'hero-skill-card';
+            }
+
+            constructor() {
+                super();
+            }
+
+            static get properties() {
+                return {
+                    skillDetail: {
+                        type: Object,
+                        notify: true,
+                    },
+                    editMode: Boolean,
+                    temp: Object
+                };
+            }
+
+            btnTapped() {
+                var temp = {
+                    name: this.temp.name,
+                    description: this.temp.description,
+                    manaCost: this.temp.manaCost,
+                    attributes: this.temp.attributes
+                };
+
+                this.set("skillDetail", temp);
+            }
+
+            onEditTap() {
+                this.editMode = !this.editMode;
+            }
+
+            ready() {
+                super.ready();
+                this.temp = JSON.parse(JSON.stringify(this.skillDetail));
+            }
+        }
+
+        window.customElements.define(HeroSkillCard.is, HeroSkillCard);
+    </script>
+</dom-module>
