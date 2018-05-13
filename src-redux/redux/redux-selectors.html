@@ -1,0 +1,21 @@
+<script src="../../node_modules/reselect/dist/reselect.js">
+</script>
+
+<script>
+    (() => {
+        const getHeroes = (state) => {
+            return state.hero.heroes;
+        };
+
+        const heroes = Reselect.createSelector([getHeroes],
+            (heroes) => {
+                return heroes;
+            }
+        );
+
+        App = window.App || {};
+        App.select = {
+            heroes,
+        };
+    })();
+</script>

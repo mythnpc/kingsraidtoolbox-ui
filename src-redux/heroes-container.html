@@ -78,7 +78,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             observer: '_pageChanged',
           },
           herodetails: {
-            type: Array
+            type: Array,
+            observer: '_heroDetailsChanged'
           },
           heroesViewModel: Array,
           classSelected: String,
@@ -92,6 +93,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         } else {
           this.heroesViewModel = this.herodetails.filter(x => x.class === className);
         }
+      }
+
+      _heroDetailsChanged(oldValue, newValue) {
+        this.filterHeroes(this.classSelected);
       }
 
       onClassSelectedChanged(selected) {

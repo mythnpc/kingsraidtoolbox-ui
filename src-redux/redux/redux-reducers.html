@@ -1,0 +1,41 @@
+<script src="../../node_modules/redux/dist/redux.min.js"></script>
+
+<script>
+    (() => {
+        const initialState = {
+            heroes: [],
+        };
+        const heroReducer = (state, action) => {
+            if (!state) return initialState;
+            let heroes = state.heroes.slice(0);
+
+            switch (action.type) {
+                case 'LOAD_HEROES_REQUEST':
+                    console.log('LOAD_HEROES_REQUEST');
+                    return state;
+
+                case 'LOAD_HEROES_SUCCESS':
+                    if (!action.json) {
+                        return Object.assign({}, state, {
+                            heroes: []
+                        });
+                    }
+                    heroes = action.json;
+                    return Object.assign({}, state, {
+                        heroes: heroes
+                    });
+
+                case 'LOAD_HEROES_FAILURE':
+                    console.log('LOAD_HEROES_FAILURE', action.error);
+                    return state;
+
+                default:
+                    return state;
+            }
+        };
+        window.App = window.App || {};
+        App.rootReducer = Redux.combineReducers({
+            hero: heroReducer,
+        });
+    })();
+</script>

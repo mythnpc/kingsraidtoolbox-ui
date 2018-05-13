@@ -1,0 +1,21 @@
+<script>
+  (() => {
+  	const callAPI = (url, params) => fetch(url, params);
+  	const baseUrl = 'http://localhost:50562/';
+  	const fetchTodos = () => {
+  		return {
+  			// Types of actions to emit before and after
+  			types: ['LOAD_HEROES_REQUEST', 'LOAD_HEROES_SUCCESS', 'LOAD_HEROES_FAILURE'],
+  			// Check the cache (optional):
+  			shouldCallAPI: state => true,
+  			// Perform the fetching:
+  			callAPI: () => callAPI(`${baseUrl}api/heroes`),
+  		};
+  	};
+  
+  	App.actions = {
+  		fetchTodos,
+  	};
+  })();
+</script>
+
